@@ -1,8 +1,10 @@
+package GUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Kruskal extends JFrame {
+public class GUI extends JFrame {
     private JButton saveButton = new JButton(new ImageIcon("src\\save.png"));
     private JButton loadButton = new JButton(new ImageIcon("src\\load.png"));
 
@@ -16,7 +18,7 @@ public class Kruskal extends JFrame {
     private JButton nextStep = new JButton(new ImageIcon("src\\next.png"));
     private JButton prevStep = new JButton(new ImageIcon("src\\prev.png"));
 
-    public Kruskal() {
+    public GUI() {
         super("Kruskal Algorithm");
 
         this.setBounds(500,200,1000,700);
@@ -285,8 +287,8 @@ public class Kruskal extends JFrame {
         });
     }
 
-    public static void main(String[] args) {
-        Kruskal app = new Kruskal();
+    public static void execute() {
+        GUI app = new GUI();
         app.setVisible(true);
     }
 
