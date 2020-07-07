@@ -20,6 +20,23 @@ public class Graph {
         this.nodeList = nodeList;
     }
 
+    public Graph(ArrayList<Edge> edgeList){
+        this.edgeList = edgeList;
+
+        this.nodeList = new ArrayList<Node>();
+
+        for (Edge e : edgeList){
+            if (!nodeList.contains(e.getFirst())){
+                nodeList.add(e.getFirst());
+            }
+
+
+            if (!nodeList.contains(e.getSecond())){
+                nodeList.add(e.getSecond());
+            }
+        }
+    }
+
     public void setEdgeList(ArrayList<Edge> edgeList) {
         this.edgeList = edgeList;
     }

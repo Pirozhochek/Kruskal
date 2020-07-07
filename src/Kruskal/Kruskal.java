@@ -11,7 +11,7 @@ import java.util.Map;
 public class Kruskal {
 
 
-    public static void KruskalAnalyze(Graph graph){
+    public static Graph KruskalAnalyze(Graph graph){
         ArrayList<Edge> result = new ArrayList<Edge>();
 
         Map<Integer, ArrayList<Node>> Unions = new HashMap<Integer, ArrayList<Node>>();
@@ -67,9 +67,7 @@ public class Kruskal {
 
         }
 
-        for (Edge e : result){
-            System.out.println(e.getWeight());
-        }
+        return new Graph(result);
 
     };
 
