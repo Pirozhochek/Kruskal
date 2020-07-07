@@ -99,11 +99,10 @@ public class Graph {
 
         for(Node e : nodeList) {
             if (!e.isVisited()) {
-                 return false;
+                return false;
             }
         }
 
         return true;
     }
 }
-
