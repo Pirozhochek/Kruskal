@@ -5,18 +5,18 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GUI extends JFrame {
-    private JButton saveButton = new JButton(new ImageIcon("Kruskal\\src\\save.png"));
-    private JButton loadButton = new JButton(new ImageIcon("Kruskal\\src\\load.png"));
+    private JButton saveButton = new JButton(new ImageIcon("src\\save.png"));
+    private JButton loadButton = new JButton(new ImageIcon("src\\load.png"));
 
     private JButton colorNodes = new JButton("Цвет вершин");
     private JButton colorEdge = new JButton("Цвет ребер");
     private JButton colorFlood = new JButton("Цвет заливки");
     private JButton thickness = new JButton("Толщина ребер");
 
-    private JButton buttonStart = new JButton(new ImageIcon("Kruskal\\src\\start.png"));
-    private JButton buttonSkip = new JButton(new ImageIcon("Kruskal\\src\\skip.png"));
-    private JButton nextStep = new JButton(new ImageIcon("Kruskal\\src\\next.png"));
-    private JButton prevStep = new JButton(new ImageIcon("Kruskal\\src\\prev.png"));
+    private JButton buttonStart = new JButton(new ImageIcon("src\\start.png"));
+    private JButton buttonSkip = new JButton(new ImageIcon("src\\skip.png"));
+    private JButton nextStep = new JButton(new ImageIcon("src\\next.png"));
+    private JButton prevStep = new JButton(new ImageIcon("src\\prev.png"));
 
     public GUI() {
         super("Kruskal Algorithm");
