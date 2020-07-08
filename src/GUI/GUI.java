@@ -294,17 +294,27 @@ public class GUI extends JFrame {
             }
         });
 
-        /*loadButton.addActionListener(new ActionListener(){
+        loadButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                Graph ready = new Graph(holst.testListEdges, holst.testList);
-                if ((ready.isConnected())) {
-                    ready = Kruskal.KruskalAnalyze(ready);
-                    holst.testListEdges = ready.getEdgeList();
+                FileDialog fd = new FileDialog((Dialog) null, "Выберите файл", FileDialog.LOAD);
+                fd.setDirectory("C:\\");
+                fd.setVisible(true);
+
+                String filename = fd.getFile();
+
+                if (filename == null){
+                   return;
                 }
+
+                Graph loadedGraph = Graph.load(filename);
+
+                holst.testList = loadedGraph.getNodeList();
+                holst.testListEdges = loadedGraph.getEdgeList();
+
                 holst.repaint();
             }
 
-        });*/
+        });
 
 
         holst.addMouseListener(new MouseAdapter() {
