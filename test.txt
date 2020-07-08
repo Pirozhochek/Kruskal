@@ -1,6 +1,10 @@
 asd
 danilkin
+<<<<<<< HEAD
 
 
 
 snizu stroka
+=======
+ivanich
+>>>>>>> 9b755066288843477eb6666f1983040a13c42412
