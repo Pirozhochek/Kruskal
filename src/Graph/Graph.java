@@ -108,7 +108,7 @@ public class Graph {
         return true;
     }
 
-   /* public static Graph load(String filename){
+    public static Graph load(String filename){
         BufferedReader reader;
 
         try{
@@ -118,15 +118,57 @@ public class Graph {
 
             String line = reader.readLine();
 
-            while(line != null){
-                String [] parsed = line.split("[^-\\s]");
+            ArrayList<Node> originalNodes = new ArrayList<Node>();
 
-                edgeList.add(new Edge(new Node(parsed[0]), new Node(parsed[1]), Integer.parseInt(parsed[2])));
+            while(line != null){
+                String [] parsed = line.split("[\\s+]");
+
+                Node first = null, second = null;
+
+                for(Node n : originalNodes){
+                    if (n.getName().equals(parsed[0])){
+                        first = n;
+                    }
+
+                    if (n.getName().equals(parsed[1])){
+                        second = n;
+                    }
+                }
+
+                if(first == null){
+                    first = new Node(parsed[0]);
+                    originalNodes.add(first);
+                }
+
+
+                if(second == null){
+                    second = new Node(parsed[1]);
+                    originalNodes.add(second);
+                }
+
+                edgeList.add(new Edge(first, second, Integer.parseInt(parsed[2])));
 
                 line = reader.readLine();
             }
 
-            return new Graph(edgeList);
+            Graph result = new Graph(edgeList);
+
+            int x = 100, y = 100, step = 75, i = 1;
+
+            for (Node e : result.getNodeList()){
+                e.setX(x);
+                e.setY(y);
+
+                x += step * i;
+
+                i *= (-1);
+
+                if (i == 1){
+                    y += step;
+                }
+            }
+
+            return result;
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Couldn't open/read file");
 
@@ -137,5 +179,5 @@ public class Graph {
             return null;
         } finally {}
 
-    }*/
+    }
 }

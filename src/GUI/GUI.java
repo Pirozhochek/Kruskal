@@ -27,6 +27,7 @@ public class GUI extends JFrame {
 
     boolean flag2 = false;
     Node saveNode = new Node();
+    int index = 0;
 
     public GUI() {
         super("Kruskal Algorithm");
@@ -274,6 +275,71 @@ public class GUI extends JFrame {
 
         this.add(holst, c);
 
+        loadButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                FileDialog fd = new FileDialog((Dialog) null, "Выберите файл", FileDialog.LOAD);
+                fd.setDirectory("C:\\");
+                fd.setVisible(true);
+
+                String filename = fd.getFile();
+
+                if (filename == null){
+                    return;
+                }
+
+                Graph loadedGraph = Graph.load(filename);
+
+                holst.testList = loadedGraph.getNodeList();
+                holst.testListEdges = loadedGraph.getEdgeList();
+
+                holst.repaint();
+            }
+
+        });
+        colorEdge.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+                holst.colorEdge = color;
+                holst.repaint();
+            }
+        });
+
+        colorNodes.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+                holst.colorNode = color;
+                holst.repaint();
+            }
+        });
+
+        buttonStart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Graph ready = new Graph(holst.testListEdges, holst.testList);
+                if ((ready.isConnected())) {
+                    ready = Kruskal.KruskalAnalyze(ready);
+                    holst.testListEdges = new ArrayList<Edge>();
+                    holst.after = ready.getEdgeList();
+                }
+                holst.repaint();
+            }
+        });
+
+        nextStep.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                holst.testListEdges.add(holst.after.get(index));
+                ++index;
+                holst.repaint();
+            }
+        });
+
+        prevStep.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                holst.testListEdges.remove(index-1);
+                --index;
+                holst.repaint();
+            }
+        });
+
         buttonSkip.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 Graph ready = new Graph(holst.testListEdges, holst.testList);
@@ -375,23 +441,22 @@ public class GUI extends JFrame {
     public class jPanel2 extends JPanel {
         ArrayList<Node> testList = new ArrayList<Node>();
         ArrayList<Edge> testListEdges = new ArrayList<Edge>();
+        ArrayList<Edge> after = new ArrayList<Edge>();
+        Color colorEdge = new Color(255, 255, 255);
+        Color colorNode = new Color(255, 255, 255);
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(new Color(255, 255, 255));
-            //g.fillOval(100, 100, 100, 100);
-            //g.fillOval(200, 200, 100, 100);
-            for (Node a : testList){
-                g.fillOval(a.getX()-25, a.getY()-25, 50, 50);
-            }
+            g.setColor(colorEdge);
             for (Edge p : testListEdges){
                 g.drawLine(p.getFirst().getX(), p.getFirst().getY(), p.getSecond().getX(), p.getSecond().getY());
                 g.drawString(Integer.toString(p.getWeight()),
                         (p.getFirst().getX() + p.getSecond().getX()) / 2 ,
                         (p.getFirst().getY() + p.getSecond().getY()) / 2 );
             }
-            //g.setColor(new Color(255, 255, 255));
-            //g.drawString("BLAH", x, y);
-            //g.drawRect(200, 200, 200, 200);
+            g.setColor(colorNode);
+            for (Node a : testList){
+                g.fillOval(a.getX()-25, a.getY()-25, 50, 50);
+            }
         }
     }
 
