@@ -7,6 +7,7 @@ import java.util.Objects;
 public class Node {
     private String name;
     private boolean visited;
+    private Color color = new Color(255, 255, 255);
     private int x;
     private int y;
 
@@ -34,6 +35,14 @@ public class Node {
 
     public int getY() {
         return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public void setName(String name) {
