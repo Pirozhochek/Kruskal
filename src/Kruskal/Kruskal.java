@@ -26,7 +26,7 @@ public class Kruskal {
 
                 Unions.put(i, new ArrayList<Node>());
                 Unions.get(i).add(e.getFirst());
-                Unions.get(i).add(e.getFirst());
+                Unions.get(i).add(e.getSecond());
 
                 e.getFirst().setUnionIndex(i);
                 e.getSecond().setUnionIndex(i);
@@ -55,6 +55,8 @@ public class Kruskal {
             }
 
             else{
+                result.add(e);
+
                 for (Node n : Unions.get(e.getFirst().getUnionIndex())) {
                     Unions.get(e.getSecond().getUnionIndex()).add(n);
 

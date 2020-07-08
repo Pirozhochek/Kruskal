@@ -1,12 +1,15 @@
 package Graph;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Node {
     private String name;
-
     private boolean visited;
+    private Color color = new Color(255, 255, 255);
+    private int x;
+    private int y;
 
     Integer unionIndex = null;
 
@@ -18,6 +21,20 @@ public class Node {
     public Node(String name){
         this.name = name;
         visited = false;
+    }
+    public Node(int first, int second){
+        name = null;
+        this.x = first;
+        this.y = second;
+        visited = false;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setName(String name) {

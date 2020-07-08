@@ -1,8 +1,15 @@
 package GUI;
-
+import Graph.*;
+//import Graph.Graph;
+//import Graph.Node;
+//import Graph.Edge;
+import Kruskal.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+//import java.awt.event.ActionEvent;
+//import java.awt.event.ActionListener;
 
 public class GUI extends JFrame {
     private JButton saveButton = new JButton(new ImageIcon("src\\save.png"));
@@ -10,13 +17,16 @@ public class GUI extends JFrame {
 
     private JButton colorNodes = new JButton("Цвет вершин");
     private JButton colorEdge = new JButton("Цвет ребер");
-    private JButton colorFlood = new JButton("Цвет заливки");
+    private JButton colorFlood = new JButton("Стереть");
     private JButton thickness = new JButton("Толщина ребер");
 
     private JButton buttonStart = new JButton(new ImageIcon("src\\start.png"));
     private JButton buttonSkip = new JButton(new ImageIcon("src\\skip.png"));
     private JButton nextStep = new JButton(new ImageIcon("src\\next.png"));
     private JButton prevStep = new JButton(new ImageIcon("src\\prev.png"));
+
+    boolean flag2 = false;
+    Node saveNode = new Node();
 
     public GUI() {
         super("Kruskal Algorithm");
@@ -117,7 +127,7 @@ public class GUI extends JFrame {
         c.gridy = 1;
         c.gridheight = 1;
         c.gridwidth = 1;
-        c.ipadx = 0;
+        c.ipadx = 35;
         c.ipady = 0;
         c.weightx = 1;
         c.weighty = 1;
@@ -245,7 +255,8 @@ public class GUI extends JFrame {
 
         this.add(panel, c);
 
-        JPanel holst = new JPanel();
+        jPanel2 holst = new jPanel2();
+
         holst.setLayout(null);
         holst.setBackground(new Color(0, 0, 0));
 
@@ -262,6 +273,47 @@ public class GUI extends JFrame {
         c.insets = new Insets(0, 0, 0, 0);
 
         this.add(holst, c);
+
+        buttonSkip.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                Graph ready = new Graph(holst.testListEdges, holst.testList);
+                if ((ready.isConnected())) {
+                    ready = Kruskal.KruskalAnalyze(ready);
+                    holst.testListEdges = ready.getEdgeList();
+                }
+                holst.repaint();
+            }
+
+        });
+
+        holst.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
+                boolean flag = true;
+                for (Node v : holst.testList){
+                    if  (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<25){
+                        flag = false;
+                        if (flag2) {
+                            holst.testListEdges.add(new Edge(saveNode, v, 10));
+                            flag2 = false;
+                            break;
+                        }
+                        saveNode = v;
+                        flag2 = true;
+                        break;
+                    }
+
+                    else if (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<50){
+                        flag = false;
+                        break;
+                    }
+               }
+                if (flag) {
+                    holst.testList.add(new Node(evt.getX(), evt.getY()));
+                    flag2 = false;
+                }
+                holst.repaint();
+            }
+        });
 
         this.addWindowListener(new WindowListener() {
             public void windowActivated(WindowEvent event) {}
@@ -285,6 +337,26 @@ public class GUI extends JFrame {
             }
 
         });
+    }
+
+    public class jPanel2 extends JPanel {
+        ArrayList<Node> testList = new ArrayList<Node>();
+        ArrayList<Edge> testListEdges = new ArrayList<Edge>();
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(new Color(255, 255, 255));
+            //g.fillOval(100, 100, 100, 100);
+            //g.fillOval(200, 200, 100, 100);
+            for (Node a : testList){
+                g.fillOval(a.getX()-25, a.getY()-25, 50, 50);
+            }
+            for (Edge p : testListEdges){
+                g.drawLine(p.getFirst().getX(), p.getFirst().getY(), p.getSecond().getX(), p.getSecond().getY());
+            }
+            //g.setColor(new Color(255, 255, 255));
+            //g.drawString("BLAH", x, y);
+            //g.drawRect(200, 200, 200, 200);
+        }
     }
 
     public static void execute() {
