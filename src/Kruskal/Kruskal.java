@@ -63,8 +63,6 @@ public class Kruskal {
                     n.setUnionIndex(e.getSecond().getUnionIndex());
                 }
 
-
-                Unions.get(e.getFirst().getUnionIndex()).removeAll(Unions.get(e.getSecond().getUnionIndex()));
             }
 
         }
