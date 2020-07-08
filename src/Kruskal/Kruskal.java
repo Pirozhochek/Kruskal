@@ -67,6 +67,9 @@ public class Kruskal {
 
         }
 
+        for (Node k : graph.getNodeList()){
+            k.setUnionIndex(null);
+        }
         return new Graph(result);
 
     };

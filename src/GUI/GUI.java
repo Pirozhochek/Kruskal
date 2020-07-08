@@ -286,6 +286,19 @@ public class GUI extends JFrame {
 
         });
 
+        /*loadButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                Graph ready = new Graph(holst.testListEdges, holst.testList);
+                if ((ready.isConnected())) {
+                    ready = Kruskal.KruskalAnalyze(ready);
+                    holst.testListEdges = ready.getEdgeList();
+                }
+                holst.repaint();
+            }
+
+        });*/
+
+
         holst.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 boolean flag = true;
@@ -293,9 +306,20 @@ public class GUI extends JFrame {
                     if  (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<25){
                         flag = false;
                         if (flag2) {
-                            holst.testListEdges.add(new Edge(saveNode, v, 10));
+                            try{
+                            int askedWeight = Integer.parseInt( JOptionPane.showInputDialog("Введите вес"));
+
+                            holst.testListEdges.add(new Edge(saveNode, v, askedWeight));
                             flag2 = false;
                             break;
+                            }
+                            catch(NumberFormatException e){
+                            JOptionPane.showMessageDialog(null, "Not a reasonable number");
+                            flag2 = false;
+                            break;
+                            }
+                            finally{
+                            }
                         }
                         saveNode = v;
                         flag2 = true;
@@ -304,6 +328,7 @@ public class GUI extends JFrame {
 
                     else if (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<50){
                         flag = false;
+                        flag2 = false;
                         break;
                     }
                }
@@ -352,6 +377,9 @@ public class GUI extends JFrame {
             }
             for (Edge p : testListEdges){
                 g.drawLine(p.getFirst().getX(), p.getFirst().getY(), p.getSecond().getX(), p.getSecond().getY());
+                g.drawString(Integer.toString(p.getWeight()),
+                        (p.getFirst().getX() + p.getSecond().getX()) / 2 ,
+                        (p.getFirst().getY() + p.getSecond().getY()) / 2 );
             }
             //g.setColor(new Color(255, 255, 255));
             //g.drawString("BLAH", x, y);

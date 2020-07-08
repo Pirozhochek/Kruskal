@@ -1,7 +1,9 @@
 package Graph;
 
+import javax.swing.*;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.io.*;
 
 import java.util.ArrayList;
 
@@ -105,4 +107,35 @@ public class Graph {
 
         return true;
     }
+
+   /* public static Graph load(String filename){
+        BufferedReader reader;
+
+        try{
+            reader = new BufferedReader(new FileReader(filename));
+
+            ArrayList<Edge> edgeList = new ArrayList<Edge>();
+
+            String line = reader.readLine();
+
+            while(line != null){
+                String [] parsed = line.split("[^-\\s]");
+
+                edgeList.add(new Edge(new Node(parsed[0]), new Node(parsed[1]), Integer.parseInt(parsed[2])));
+
+                line = reader.readLine();
+            }
+
+            return new Graph(edgeList);
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Couldn't open/read file");
+
+            return null;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Couldn't open/read file");
+
+            return null;
+        } finally {}
+
+    }*/
 }
