@@ -7,7 +7,6 @@ import java.util.Objects;
 public class Node {
     private String name;
     private boolean visited;
-    private Color color = new Color(255, 255, 255);
     private int x;
     private int y;
 
