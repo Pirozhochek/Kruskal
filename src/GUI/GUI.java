@@ -286,6 +286,14 @@ public class GUI extends JFrame {
 
         });
 
+        colorFlood.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                holst.testListEdges = new ArrayList<Edge>();
+                holst.testList = new ArrayList<Node>();
+                holst.repaint();
+            }
+        });
+
         /*loadButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 Graph ready = new Graph(holst.testListEdges, holst.testList);
@@ -307,14 +315,14 @@ public class GUI extends JFrame {
                         flag = false;
                         if (flag2) {
                             try{
-                            int askedWeight = Integer.parseInt( JOptionPane.showInputDialog("Введите вес"));
+                            int askedWeight = Integer.parseInt( JOptionPane.showInputDialog(null, "Введите вес ребра", "", JOptionPane.PLAIN_MESSAGE));
 
                             holst.testListEdges.add(new Edge(saveNode, v, askedWeight));
                             flag2 = false;
                             break;
                             }
                             catch(NumberFormatException e){
-                            JOptionPane.showMessageDialog(null, "Not a reasonable number");
+                            JOptionPane.showMessageDialog(null, "Требуется целочисленное значение!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
                             flag2 = false;
                             break;
                             }
@@ -352,7 +360,7 @@ public class GUI extends JFrame {
 
                 int rc = JOptionPane.showOptionDialog(
                         event.getWindow(), "Вы действительно хотите выйти?",
-                        "Требуется подтверждение.", JOptionPane.DEFAULT_OPTION,
+                        "Требуется подтверждение", JOptionPane.DEFAULT_OPTION,
                         JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
                 if (rc == 0) {
