@@ -7,7 +7,6 @@ import java.util.Objects;
 public class Node {
     private String name;
     private boolean visited;
-    private Color color = new Color(255, 255, 255);
     private int x;
     private int y;
 
@@ -29,20 +28,20 @@ public class Node {
         visited = false;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public void setX(int x) {
         this.x = x;
     }
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setName(String name) {
