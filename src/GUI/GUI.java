@@ -298,7 +298,7 @@ public class GUI extends JFrame {
         });
         colorEdge.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+                Color color=JColorChooser.showDialog(null, "Выберите цвет", holst.colorEdge);
                 holst.colorEdge = color;
                 holst.repaint();
             }
@@ -306,7 +306,7 @@ public class GUI extends JFrame {
 
         colorNodes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+                Color color=JColorChooser.showDialog(null, "Выберите цвет", holst.colorNode);
                 holst.colorNode = color;
                 holst.repaint();
             }
@@ -326,17 +326,31 @@ public class GUI extends JFrame {
 
         nextStep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                holst.testListEdges.add(holst.after.get(index));
-                ++index;
-                holst.repaint();
+                if (!holst.after.isEmpty()) {
+                    try {
+                        holst.testListEdges.add(holst.after.get(index));
+                        ++index;
+                        holst.repaint();
+                    }
+                    catch (Exception x) {
+                        JOptionPane.showMessageDialog(null, "Остовное дерево получено!", "", JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Алгоритм еще не применен!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
         prevStep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                holst.testListEdges.remove(index-1);
-                --index;
-                holst.repaint();
+                try {
+                    holst.testListEdges.remove(index - 1);
+                    --index;
+                    holst.repaint();
+                }
+                catch (Exception x) {
+                    JOptionPane.showMessageDialog(null, "Вы на начальном шаге!", "", JOptionPane.PLAIN_MESSAGE);
+                }
             }
         });
 
@@ -360,19 +374,6 @@ public class GUI extends JFrame {
             }
         });
 
-        /*loadButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                Graph ready = new Graph(holst.testListEdges, holst.testList);
-                if ((ready.isConnected())) {
-                    ready = Kruskal.KruskalAnalyze(ready);
-                    holst.testListEdges = ready.getEdgeList();
-                }
-                holst.repaint();
-            }
-
-        });*/
-
-
         holst.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 boolean flag = true;
@@ -381,16 +382,19 @@ public class GUI extends JFrame {
                         flag = false;
                         if (flag2) {
                             try{
-                            int askedWeight = Integer.parseInt( JOptionPane.showInputDialog(null, "Введите вес ребра", "", JOptionPane.PLAIN_MESSAGE));
-
-                            holst.testListEdges.add(new Edge(saveNode, v, askedWeight));
-                            flag2 = false;
-                            break;
+                                String string = JOptionPane.showInputDialog(null, "Введите вес ребра", "", JOptionPane.PLAIN_MESSAGE);
+                                int askedWeight;
+                                if (string != null) {
+                                    askedWeight = Integer.parseInt(string);
+                                    holst.testListEdges.add(new Edge(saveNode, v, askedWeight));
+                                }
+                                flag2 = false;
+                                break;
                             }
                             catch(NumberFormatException e){
-                            JOptionPane.showMessageDialog(null, "Требуется целочисленное значение!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
-                            flag2 = false;
-                            break;
+                                JOptionPane.showMessageDialog(null, "Требуется целочисленное значение!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+                                flag2 = false;
+                                break;
                             }
                             finally{
                             }
