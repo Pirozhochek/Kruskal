@@ -1,16 +1,10 @@
 package GUI;
 import Graph.*;
-//import Graph.Graph;
-//import Graph.Node;
-//import Graph.Edge;
 import Algorithm.*;
 import javax.swing.*;
-//import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
 
 public class GUI extends JFrame {
     private JButton saveButton = new JButton(new ImageIcon("src\\save.png"));
