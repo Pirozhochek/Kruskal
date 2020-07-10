@@ -363,6 +363,11 @@ public class GUI extends JFrame {
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (holst.testListEdges.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Холст пуст!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+
+                    return;
+                }
                 index = 0;
 
                 holst.after = new ArrayList<Edge>();
@@ -421,6 +426,12 @@ public class GUI extends JFrame {
         buttonSkip.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 Graph ready;
+
+                if (holst.testListEdges.isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Холст пуст!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+
+                    return;
+                }
 
                 if (holst.after.isEmpty())
                     ready = new Graph(holst.testListEdges, holst.testList);
