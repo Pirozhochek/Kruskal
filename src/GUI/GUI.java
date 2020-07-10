@@ -3,12 +3,11 @@ import Graph.*;
 //import Graph.Graph;
 //import Graph.Node;
 //import Graph.Edge;
-import Kruskal.*;
+import Algorithm.*;
 import javax.swing.*;
 //import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
 import java.awt.event.*;
-import java.nio.channels.AlreadyConnectedException;
 import java.util.ArrayList;
 //import java.awt.event.ActionEvent;
 //import java.awt.event.ActionListener;
@@ -363,7 +362,7 @@ public class GUI extends JFrame {
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (holst.testListEdges.isEmpty()){
+                if (holst.testList.isEmpty()){
                     JOptionPane.showMessageDialog(null, "Холст пуст!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
 
                     return;
@@ -427,7 +426,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Graph ready;
 
-                if (holst.testListEdges.isEmpty()){
+                if (holst.testList.isEmpty()){
                     JOptionPane.showMessageDialog(null, "Холст пуст!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
 
                     return;
