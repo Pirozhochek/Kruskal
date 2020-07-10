@@ -1,0 +1,8 @@
+a b 18
+b c 3
+d c 2
+f d 3
+f c 6
+f b 8
+a c 4
+a f 7
