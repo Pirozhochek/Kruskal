@@ -5,6 +5,7 @@ import Graph.*;
 //import Graph.Edge;
 import Kruskal.*;
 import javax.swing.*;
+//import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class GUI extends JFrame {
     private JButton colorNodes = new JButton("Цвет вершин");
     private JButton colorEdge = new JButton("Цвет ребер");
     private JButton colorFlood = new JButton("Стереть");
-    private JButton thickness = new JButton("Толщина ребер");
+    private JButton thickness = new JButton("Справка");
 
     private JButton buttonStart = new JButton(new ImageIcon("src\\start.png"));
     private JButton buttonSkip = new JButton(new ImageIcon("src\\skip.png"));
@@ -109,7 +110,7 @@ public class GUI extends JFrame {
         c.gridy = 0;
         c.gridheight = 1;
         c.gridwidth = 1;
-        c.ipadx = 25;
+        c.ipadx = 20;
         c.ipady = 0;
         c.weightx = 1;
         c.weighty = 1;
@@ -147,7 +148,7 @@ public class GUI extends JFrame {
         c.gridy = 1;
         c.gridheight = 1;
         c.gridwidth = 1;
-        c.ipadx = 0;
+        c.ipadx = 35;
         c.ipady = 0;
         c.weightx = 1;
         c.weighty = 1;
@@ -275,6 +276,19 @@ public class GUI extends JFrame {
 
         this.add(holst, c);
 
+        thickness.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "1. Для добавления вершины нажмите на холст.\n" +
+                        "2. Для добавления ребра нажмите сначала на первую вершину, затем на вторую. После чего введите вес ребра.\n" +
+                        "3. Для пошагового выполнения алгоритма нажмите на кнопку \"Play\".\nУправляйте процессом при помощи стрелок. " +
+                        "Стрелка влево - шаг назад. Стрелка вправо - шаг вперед.\n" +
+                        "4. Для мгновенного получения ответа нажмите на кнопку \"Skip\".\n" +
+                        "5. Вы можете выбрать цвет вершин и ребер, нажав на соответствующие кнопки на панеле.\n" +
+                        "6. Вы можете стереть все с холста, нажав на кнопку \"Стереть\".\n" +
+                        "7. Вы можете произвести ввод из файла и вывод в файл, нажав на соответствующие кнопки на панеле.", "Справка", JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+
         loadButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 FileDialog fd = new FileDialog((Dialog) null, "Выберите файл", FileDialog.LOAD);
@@ -298,28 +312,34 @@ public class GUI extends JFrame {
         });
         colorEdge.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Color color=JColorChooser.showDialog(null, "Выберите цвет", holst.colorEdge);
-                holst.colorEdge = color;
+                Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+                if (color!=null)
+                    holst.colorEdge = color;
                 holst.repaint();
             }
         });
 
         colorNodes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Color color=JColorChooser.showDialog(null, "Выберите цвет", holst.colorNode);
-                holst.colorNode = color;
+                Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+                if (color!=null)
+                    holst.colorNode = color;
                 holst.repaint();
             }
         });
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                index = 0;
+                holst.after = new ArrayList<Edge>();
                 Graph ready = new Graph(holst.testListEdges, holst.testList);
                 if ((ready.isConnected())) {
                     ready = Kruskal.KruskalAnalyze(ready);
                     holst.testListEdges = new ArrayList<Edge>();
                     holst.after = ready.getEdgeList();
                 }
+                else
+                    JOptionPane.showMessageDialog(null, "Граф не связный!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
                 holst.repaint();
             }
         });
@@ -356,11 +376,23 @@ public class GUI extends JFrame {
 
         buttonSkip.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                Graph ready = new Graph(holst.testListEdges, holst.testList);
+                Graph ready;
+                if (holst.after.isEmpty())
+                    ready = new Graph(holst.testListEdges, holst.testList);
+                else {
+                    ready = new Graph(holst.after, holst.testList);
+                    index = holst.after.size();
+                }
                 if ((ready.isConnected())) {
                     ready = Kruskal.KruskalAnalyze(ready);
-                    holst.testListEdges = ready.getEdgeList();
+                    holst.testListEdges = new ArrayList<Edge>();
+                    holst.after = ready.getEdgeList();
+                    index = holst.after.size();
+                    for (Edge mda : holst.after)
+                        holst.testListEdges.add(mda);
                 }
+                else
+                    JOptionPane.showMessageDialog(null, "Граф не связный!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
                 holst.repaint();
             }
 
@@ -405,6 +437,7 @@ public class GUI extends JFrame {
                     }
 
                     else if (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<50){
+                        JOptionPane.showMessageDialog(null, "Вершины пересекаются!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
                         flag = false;
                         flag2 = false;
                         break;
