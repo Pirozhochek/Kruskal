@@ -543,7 +543,7 @@ public class GUI extends JFrame {
                 g.fillOval(a.getX()-25, a.getY()-25, 50, 50);
 
                 g.setColor(black);
-                g.drawString(a.getName(), a.getX(), a.getY());
+                g.drawString(a.getName(), a.getX() - 3, a.getY() + 3);
             }
 
         }
