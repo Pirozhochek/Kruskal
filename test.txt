@@ -1,7 +1,11 @@
 a b 5
-b c 7
-a c 3
-c d 4
+a2 c 7
+d1 d2 7
+d3 d4 9
+d5 d6 7
+d9 d11 2
+a3 c 3
+a4 d 4
 a d 5
 b d 7
 d e 4

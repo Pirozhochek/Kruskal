@@ -112,6 +112,45 @@ public class Graph {
         return true;
     }
 
+    public void save(String filename){
+
+        BufferedWriter writer;
+        NodeFactory factoryNode = new NodeFactory();
+        EdgeFactory factoryEdge = new EdgeFactory();
+        GraphFactory factoryGraph = new GraphFactory();
+
+        try{
+            writer = new BufferedWriter(new FileWriter(filename));
+
+            for(Edge e : edgeList){
+                String toPut = e.getFirst().getName() + " " + e.getSecond().getName() + " "
+                        + e.getWeight() + "\n";
+
+                writer.write(toPut);
+            }
+
+            for(Node e : nodeList){
+                if(adjacentNodes(e).size() == 0){
+                    String toPut = e.getName() + "\n";
+
+                    writer.write(toPut);
+                }
+            }
+
+            writer.close();
+
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Couldn't open/read file");
+
+            return;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Couldn't open/read file");
+
+            return;
+        } finally {}
+
+    }
+
     public static Graph load(String filename){
         BufferedReader reader;
         NodeFactory factoryNode = new NodeFactory();
@@ -160,19 +199,28 @@ public class Graph {
 
             Graph result = factoryGraph.getGraph(edgeList);
 
-            int x = 100, y = 100, step = 75, i = 1;
+            double angle = 0;
 
-            for (Node e : result.getNodeList()){
-                e.setX(x);
-                e.setY(y);
+            int[] x = new int[result.getNodeList().size()];
+            int[] y = new int[result.getNodeList().size()];
 
-                x += step * i;
+            for(int i = 0 ; i < result.getNodeList().size()  ;++i)
+            {
+                angle = i * (360/result.getNodeList().size());
 
-                i *= (-1);
+                x[i] = (int) (550 + 200 * Math.cos(Math.toRadians(angle)));
+                y[i] = (int) (250 + 200 * Math.sin(Math.toRadians(angle)));
 
-                if (i == 1){
-                    y += step;
-                }
+            }
+
+            int i = 0;
+
+            for(Node e : result.getNodeList())
+            {
+                e.setX(x[i]);
+                e.setY(y[i]);
+
+                i++;
             }
 
             return result;

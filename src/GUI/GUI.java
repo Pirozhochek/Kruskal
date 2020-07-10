@@ -8,6 +8,7 @@ import javax.swing.*;
 //import javax.swing.colorchooser.AbstractColorChooserPanel;
 import java.awt.*;
 import java.awt.event.*;
+import java.nio.channels.AlreadyConnectedException;
 import java.util.ArrayList;
 //import java.awt.event.ActionEvent;
 //import java.awt.event.ActionListener;
@@ -33,6 +34,7 @@ public class GUI extends JFrame {
     boolean edgeAddFlag = false;
     Node saveNode;
     int index = 0;
+    int collisionBreaker = 2;
 
     public GUI() {
         super("GraphAnalyzer Algorithm");
@@ -310,7 +312,29 @@ public class GUI extends JFrame {
                 holst.testList = loadedGraph.getNodeList();
                 holst.testListEdges = loadedGraph.getEdgeList();
 
+                factoryEdge = new EdgeFactory();
+                factoryGraph = new GraphFactory();
+                factoryNode = new NodeFactory();
                 holst.repaint();
+            }
+
+        });
+
+        saveButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                FileDialog fd = new FileDialog((Dialog) null, "Выберите файл", FileDialog.SAVE);
+                fd.setDirectory("C:\\");
+                fd.setVisible(true);
+
+                String filename = fd.getFile();
+
+                if (filename == null){
+                    return;
+                }
+
+                Graph toBeSaved = factoryGraph.getGraph(holst.testListEdges, holst.testList);
+
+                toBeSaved.save(filename);
             }
 
         });
@@ -380,15 +404,17 @@ public class GUI extends JFrame {
 
         prevStep.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    holst.testListEdges.remove(index - 1);
-                    --index;
-
-                    holst.repaint();
+                if (!holst.after.isEmpty()) {
+                    try {
+                        holst.testListEdges.remove(index - 1);
+                        --index;
+                        holst.repaint();
+                    } catch (Exception x) {
+                        JOptionPane.showMessageDialog(null, "Вы на начальном шаге!", "", JOptionPane.PLAIN_MESSAGE);
+                    }
                 }
-                catch (Exception x) {
-                    JOptionPane.showMessageDialog(null, "Вы на начальном шаге!", "", JOptionPane.PLAIN_MESSAGE);
-                }
+                else
+                    JOptionPane.showMessageDialog(null, "Алгоритм еще не применен!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -429,6 +455,9 @@ public class GUI extends JFrame {
                 holst.testListEdges = new ArrayList<Edge>();
                 holst.testList = new ArrayList<Node>();
 
+                factoryEdge = new EdgeFactory();
+                factoryNode = new NodeFactory();
+                factoryGraph = new GraphFactory();
                 holst.repaint();
             }
         });
@@ -438,7 +467,7 @@ public class GUI extends JFrame {
                 boolean flag = true;
 
                 for (Node v : holst.testList){
-                    if  (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<25){
+                    if  (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<15){
                         flag = false;
 
                         if (edgeAddFlag) {
@@ -448,8 +477,28 @@ public class GUI extends JFrame {
                                 int askedWeight;
 
                                 if (string != null) {
-                                    askedWeight = Integer.parseInt(string);
-                                    holst.testListEdges.add(factoryEdge.getEdge(saveNode, v, askedWeight));
+
+                                    for (Edge e : holst.testListEdges)
+                                    {
+                                        if((e.getFirst() == saveNode) && (e.getSecond() == v) ||
+                                                (e.getFirst() == v) && (e.getSecond() == saveNode)){
+
+                                            JOptionPane.showMessageDialog(null, "Ребро уже существует!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+                                            edgeAddFlag = false;
+                                        }
+
+                                        if((saveNode == v)){
+                                        JOptionPane.showMessageDialog(null, "Нельзя создавать петли!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+
+                                    }
+                                    }
+
+
+
+                                    if(edgeAddFlag) {
+                                        askedWeight = Integer.parseInt(string);
+                                        holst.testListEdges.add(factoryEdge.getEdge(saveNode, v, askedWeight));
+                                    }
                                 }
 
                                 edgeAddFlag = false;
@@ -470,7 +519,7 @@ public class GUI extends JFrame {
                         break;
                     }
 
-                    else if (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<50){
+                    else if (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<30){
                         JOptionPane.showMessageDialog(null, "Вершины пересекаются!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
 
                         flag = false;
@@ -480,6 +529,23 @@ public class GUI extends JFrame {
                }
                 if (flag) {
                     Node tmp = factoryNode.getNode();
+
+                    boolean foundName = false;
+
+                    while(!foundName) {
+                        foundName = true;
+
+                        for (Node e : holst.testList) {
+                            if (e.getName().equals(tmp.getName())) {
+                                tmp.setName(tmp.getName() + (collisionBreaker++));
+
+                                foundName = false;
+                                continue;
+                            }
+                        }
+                    }
+
+                    collisionBreaker = 2;
 
                     tmp.setX(evt.getX());
                     tmp.setY(evt.getY());
@@ -540,7 +606,7 @@ public class GUI extends JFrame {
             }
             for (Node a : testList){
                 g.setColor(colorNode);
-                g.fillOval(a.getX()-25, a.getY()-25, 50, 50);
+                g.fillOval(a.getX() - 15, a.getY() - 15, 30, 30);
 
                 g.setColor(black);
                 g.drawString(a.getName(), a.getX() - 3, a.getY() + 3);
