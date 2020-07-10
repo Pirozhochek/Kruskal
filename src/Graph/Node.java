@@ -2,8 +2,7 @@ package Graph;
 
 import Graph.GUIdata.NodeGUIdata;
 
-import java.awt.*;
-import java.util.ArrayList;
+
 import java.util.Objects;
 
 public class Node extends NodeGUIdata {
