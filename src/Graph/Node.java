@@ -1,16 +1,13 @@
 package Graph;
 
+import Graph.GUIdata.NodeGUIdata;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Node {
-    private String name;
-    private boolean visited;
-    private int x;
-    private int y;
-
-    Integer unionIndex = null;
+public class Node extends NodeGUIdata {
+    protected String name;
 
     public Node(){
         name = null;
@@ -21,28 +18,6 @@ public class Node {
         this.name = name;
         visited = false;
     }
-    public Node(int first, int second){
-        name = null;
-        this.x = first;
-        this.y = second;
-        visited = false;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -50,23 +25,6 @@ public class Node {
 
     public String getName() {
         return name;
-    }
-
-    public void setVisited(boolean visited) {
-        this.visited = visited;
-    }
-
-    public boolean isVisited() {
-        return visited;
-    }
-
-
-    public Integer getUnionIndex() {
-        return unionIndex;
-    }
-
-    public void setUnionIndex(Integer unionIndex) {
-        this.unionIndex = unionIndex;
     }
 
 

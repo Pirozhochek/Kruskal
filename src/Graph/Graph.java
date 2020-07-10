@@ -1,5 +1,9 @@
 package Graph;
 
+import GUI.EdgeFactory;
+import GUI.GraphFactory;
+import GUI.NodeFactory;
+
 import javax.swing.*;
 import java.util.Queue;
 import java.util.LinkedList;
@@ -110,6 +114,9 @@ public class Graph {
 
     public static Graph load(String filename){
         BufferedReader reader;
+        NodeFactory factoryNode = new NodeFactory();
+        EdgeFactory factoryEdge = new EdgeFactory();
+        GraphFactory factoryGraph = new GraphFactory();
 
         try{
             reader = new BufferedReader(new FileReader(filename));
@@ -136,22 +143,22 @@ public class Graph {
                 }
 
                 if(first == null){
-                    first = new Node(parsed[0]);
+                    first = (factoryNode).getNode(parsed[0]);
                     originalNodes.add(first);
                 }
 
 
                 if(second == null){
-                    second = new Node(parsed[1]);
+                    second = factoryNode.getNode(parsed[1]);
                     originalNodes.add(second);
                 }
 
-                edgeList.add(new Edge(first, second, Integer.parseInt(parsed[2])));
+                edgeList.add(factoryEdge.getEdge(first, second, Integer.parseInt(parsed[2])));
 
                 line = reader.readLine();
             }
 
-            Graph result = new Graph(edgeList);
+            Graph result = factoryGraph.getGraph(edgeList);
 
             int x = 100, y = 100, step = 75, i = 1;
 

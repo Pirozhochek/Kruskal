@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Kruskal {
+public class GraphAnalyzer implements Alghoritms {
+    @Override
+    public Graph KruskalAnalyze(Graph graph){
+        GraphFactory factoryGraph = new GraphFactory();
 
-
-    public static Graph KruskalAnalyze(Graph graph){
         ArrayList<Edge> result = new ArrayList<Edge>();
 
         Map<Integer, ArrayList<Node>> Unions = new HashMap<Integer, ArrayList<Node>>();
@@ -70,7 +71,12 @@ public class Kruskal {
         for (Node k : graph.getNodeList()){
             k.setUnionIndex(null);
         }
-        return new Graph(result);
+
+        for (Node k:graph.getNodeList()){
+            k.setVisited(false);
+        }
+
+        return factoryGraph.getGraph(result);
 
     };
 

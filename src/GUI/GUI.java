@@ -26,12 +26,16 @@ public class GUI extends JFrame {
     private JButton nextStep = new JButton(new ImageIcon("src\\next.png"));
     private JButton prevStep = new JButton(new ImageIcon("src\\prev.png"));
 
-    boolean flag2 = false;
-    Node saveNode = new Node();
+    GraphFactory factoryGraph = new GraphFactory();
+    NodeFactory factoryNode = new NodeFactory();
+    EdgeFactory factoryEdge = new EdgeFactory();
+
+    boolean edgeAddFlag = false;
+    Node saveNode;
     int index = 0;
 
     public GUI() {
-        super("Kruskal Algorithm");
+        super("GraphAnalyzer Algorithm");
 
         this.setBounds(500,200,1000,700);
         this.getContentPane().setLayout(new GridBagLayout());
@@ -310,11 +314,14 @@ public class GUI extends JFrame {
             }
 
         });
+
         colorEdge.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+
                 if (color!=null)
                     holst.colorEdge = color;
+
                 holst.repaint();
             }
         });
@@ -322,8 +329,10 @@ public class GUI extends JFrame {
         colorNodes.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Color color=JColorChooser.showDialog(null, "Выберите цвет", new Color(255,255,255));
+
                 if (color!=null)
                     holst.colorNode = color;
+
                 holst.repaint();
             }
         });
@@ -331,15 +340,22 @@ public class GUI extends JFrame {
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 index = 0;
+
                 holst.after = new ArrayList<Edge>();
+
                 Graph ready = new Graph(holst.testListEdges, holst.testList);
+
                 if ((ready.isConnected())) {
-                    ready = Kruskal.KruskalAnalyze(ready);
+                    GraphAnalyzer analyzer= new GraphAnalyzer();
+                    ready = analyzer.KruskalAnalyze(ready);
+
                     holst.testListEdges = new ArrayList<Edge>();
+
                     holst.after = ready.getEdgeList();
                 }
                 else
                     JOptionPane.showMessageDialog(null, "Граф не связный!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+
                 holst.repaint();
             }
         });
@@ -350,6 +366,7 @@ public class GUI extends JFrame {
                     try {
                         holst.testListEdges.add(holst.after.get(index));
                         ++index;
+
                         holst.repaint();
                     }
                     catch (Exception x) {
@@ -366,6 +383,7 @@ public class GUI extends JFrame {
                 try {
                     holst.testListEdges.remove(index - 1);
                     --index;
+
                     holst.repaint();
                 }
                 catch (Exception x) {
@@ -377,22 +395,30 @@ public class GUI extends JFrame {
         buttonSkip.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 Graph ready;
+
                 if (holst.after.isEmpty())
                     ready = new Graph(holst.testListEdges, holst.testList);
                 else {
                     ready = new Graph(holst.after, holst.testList);
+
                     index = holst.after.size();
                 }
+
                 if ((ready.isConnected())) {
-                    ready = Kruskal.KruskalAnalyze(ready);
+                    GraphAnalyzer analyzer= new GraphAnalyzer();
+                    ready = analyzer.KruskalAnalyze(ready);
+
                     holst.testListEdges = new ArrayList<Edge>();
                     holst.after = ready.getEdgeList();
+
                     index = holst.after.size();
+
                     for (Edge mda : holst.after)
                         holst.testListEdges.add(mda);
                 }
                 else
                     JOptionPane.showMessageDialog(null, "Граф не связный!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+
                 holst.repaint();
             }
 
@@ -402,6 +428,7 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 holst.testListEdges = new ArrayList<Edge>();
                 holst.testList = new ArrayList<Node>();
+
                 holst.repaint();
             }
         });
@@ -409,44 +436,59 @@ public class GUI extends JFrame {
         holst.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
                 boolean flag = true;
+
                 for (Node v : holst.testList){
                     if  (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<25){
                         flag = false;
-                        if (flag2) {
+
+                        if (edgeAddFlag) {
                             try{
                                 String string = JOptionPane.showInputDialog(null, "Введите вес ребра", "", JOptionPane.PLAIN_MESSAGE);
+
                                 int askedWeight;
+
                                 if (string != null) {
                                     askedWeight = Integer.parseInt(string);
-                                    holst.testListEdges.add(new Edge(saveNode, v, askedWeight));
+                                    holst.testListEdges.add(factoryEdge.getEdge(saveNode, v, askedWeight));
                                 }
-                                flag2 = false;
+
+                                edgeAddFlag = false;
                                 break;
                             }
                             catch(NumberFormatException e){
                                 JOptionPane.showMessageDialog(null, "Требуется целочисленное значение!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
-                                flag2 = false;
+
+                                edgeAddFlag = false;
                                 break;
                             }
                             finally{
                             }
                         }
+
                         saveNode = v;
-                        flag2 = true;
+                        edgeAddFlag = true;
                         break;
                     }
 
                     else if (Math.sqrt((v.getX()-evt.getX())*(v.getX()-evt.getX())+(v.getY()-evt.getY())*(v.getY()-evt.getY()))<50){
                         JOptionPane.showMessageDialog(null, "Вершины пересекаются!", "Ошибка", JOptionPane.PLAIN_MESSAGE);
+
                         flag = false;
-                        flag2 = false;
+                        edgeAddFlag = false;
                         break;
                     }
                }
                 if (flag) {
-                    holst.testList.add(new Node(evt.getX(), evt.getY()));
-                    flag2 = false;
+                    Node tmp = factoryNode.getNode();
+
+                    tmp.setX(evt.getX());
+                    tmp.setY(evt.getY());
+
+                    holst.testList.add(tmp);
+
+                    edgeAddFlag = false;
                 }
+
                 holst.repaint();
             }
         });
@@ -479,21 +521,31 @@ public class GUI extends JFrame {
         ArrayList<Node> testList = new ArrayList<Node>();
         ArrayList<Edge> testListEdges = new ArrayList<Edge>();
         ArrayList<Edge> after = new ArrayList<Edge>();
+
         Color colorEdge = new Color(255, 255, 255);
         Color colorNode = new Color(255, 255, 255);
+        Color black = new Color(0, 0, 0);
+
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+
             g.setColor(colorEdge);
+
             for (Edge p : testListEdges){
                 g.drawLine(p.getFirst().getX(), p.getFirst().getY(), p.getSecond().getX(), p.getSecond().getY());
+
                 g.drawString(Integer.toString(p.getWeight()),
                         (p.getFirst().getX() + p.getSecond().getX()) / 2 ,
                         (p.getFirst().getY() + p.getSecond().getY()) / 2 );
             }
-            g.setColor(colorNode);
             for (Node a : testList){
+                g.setColor(colorNode);
                 g.fillOval(a.getX()-25, a.getY()-25, 50, 50);
+
+                g.setColor(black);
+                g.drawString(a.getName(), a.getX(), a.getY());
             }
+
         }
     }
 
