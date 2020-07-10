@@ -1,4 +1,4 @@
-package Kruskal;
+package Algorithm;
 
 import Graph.Graph;
 
